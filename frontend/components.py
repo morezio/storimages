@@ -1,3 +1,4 @@
+## Right now both layout and components live here to not make a mess of files
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
