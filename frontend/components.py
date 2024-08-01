@@ -33,6 +33,13 @@ upload_button = dbc.Col(
     ]
 )
 
+# must appear only when processing is done
+download_button = dbc.Col(
+    children=[
+        html.Button('Download results', id='download_button')
+    ]
+)
+
 # to make sure the user wants to proceed
 submit_button = html.Button('Submit', id='submit_button', n_clicks=0)
 
@@ -95,6 +102,8 @@ storimages_layout = dbc.Container(
         dbc.Row([html.Br()]),
         dbc.Row([dbc.Col([upload_button],className='action-button-column')]),
         dbc.Row([html.Br()]),
+        dbc.Row([html.Br()]),
+        dbc.Row([dbc.Col([download_button])]),
         dbc.Row([html.Br()]),
         dbc.Row([html.Br()]),
         dbc.Row([dbc.Col([instructions_button],className='action-button-column')]),
