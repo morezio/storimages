@@ -24,6 +24,27 @@ app = Dash(__name__, server=server, background_callback_manager=lc_manager)
 app.title = "StorImages"
 app.layout = storimages_layout
 
+# show list of valid files
+@app.callback()
+def show_uploaded_files():
+    # if .zip: unzip and check all files are valid
+    # if single image: check is valid
+    # if valid, confirm submit; if not valid, refresh and start over
+    pass
+
+@app.callback(
+    [
+        Output("download_legend_div", "children"),
+        Input("submit_button", "n_clicks"),
+        State("thumbnail_sizes_dropdown_multiselect", "value"),
+        State("other_thumbnail_singleselect", "value"),
+    ],
+    background=True,
+    prevent_initial_call=True,
+    manager=lc_manager,
+)
+def submit_load(n_clicks, thumbnail_sizes, other_thumbnail_single):
+    pass
 
 
 if __name__ == "__main__":
