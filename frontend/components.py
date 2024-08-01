@@ -32,15 +32,16 @@ submit_button = html.Button('Submit', id='submit_button', n_clicks=0)
 # area where the upload display should be
 upload_column = dbc.Col(align='center',children=[
     html.Div(
-        className='',
         children=[
             # either zip or a directory of pictures or a selection of them
             dcc.Upload( 
                 id='upload_batch',
+                className='highlight',
                 children=[
                     html.Div([
                         html.H2(
-                            "Drag & drop or click here to select your pictures"
+                            "Drag & drop or click here to select your pictures",
+                            className='context-text'
                         )
                     ])
                 ]#, multiple=False # allowing for multiple risk;; mind how to handle it 
