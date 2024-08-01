@@ -1,4 +1,5 @@
 :root {
+    /* defines a gradient to highlight */
     --accent: 1, 184, 106;
     /* at 85% the accent */
     --accent-light: 179, 255, 222; 
@@ -8,11 +9,19 @@
             rgb(var(--accent)),
             rgb(var(--accent-light)) 30%,
             white 60%);
+
+    --background-deep-green: #002e33;
+    --background-army-green: #0b3a2d;
+    --background-cheerful-green: #00a766;
+    --highlight-gradient: linear-gradient(45deg,
+            rgb(var(--background-deep-green)),
+            rgb(var(--background-cheerful-green)) 30%,
+            white 60%);
 }
 /* colour in the background is the S in Stori logo */
 html {
     font-family: system-ui, sans-serif;
-    background: #01383d;
+    background: var(--background-deep-green);
     background-size: 224px;
 }
 
@@ -23,7 +32,7 @@ h1 {
     text-align: center;
     margin-bottom: 1em;
     -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-color: white;
 }
 
 .text-gradient {
@@ -34,6 +43,19 @@ h1 {
     background-position: 0%;
 }
 
+/* set perimeters to a highlight and make it the center down */
+.highlight {
+    /* background-image: var(--background-cheerful-green); */
+    background-image: white;
+    text-align: center;
+    /* -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; */
+    /* border: 2px solid var(--highlight-gradient); not working */ 
+    border: 2px dashed var(--background-cheerful-green);
+}
+.context-text {
+    color:white
+}
 /* to replicate as the one in the website, just a sketch */
 /* @font-face { */
     /* font-family: __f37hybrid_1e57a6; */
