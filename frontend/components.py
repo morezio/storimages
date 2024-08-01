@@ -46,3 +46,32 @@ upload_column = dbc.Col(align='center',children=[
         ]
     )
 ], width=12)
+
+##############
+### Layout ###
+##############
+
+# all within a major container; might have inner containers
+storimages_layout = dbc.Container(
+    [
+        dbc.Row([html.H1("StorImages", className="text-gradient")]),
+        dbc.Row(
+            [
+                dbc.Col([
+                    html.Div([
+                        # upload_column is full grid
+                        dbc.Row([upload_column]),
+                        dbc.Row([html.Br()]), # placeholder for loading bar
+                        dbc.Row([html.Br()]), # spacing
+                        # download button and legend
+                        # dbc.Row([download_button]),
+                        # dbc.Row([update_legend_div]),
+                    ], className='container') # highlight box
+                ])
+            ]
+                ),
+        dbc.Row([html.Br()]),
+        dbc.Row([instructions_button]),
+        dbc.Row([instructions_division]),
+    ], fluid=True
+)
