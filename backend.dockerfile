@@ -28,4 +28,4 @@ CMD gunicorn \
 --access-logfile=- \
 --error-logfile=- \
 --capture-output=- \
---bind=0.0.0.0:80 app:server
+--bind=0.0.0.0:80 app:app
