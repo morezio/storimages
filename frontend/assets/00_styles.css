@@ -56,6 +56,12 @@ h1 {
 .context-text {
     color:white
 }
+/* .action-button {
+    align-items: center;
+} */
+.action-button-column {
+    align-items: center;
+}
 /* to replicate as the one in the website, just a sketch */
 /* @font-face { */
     /* font-family: __f37hybrid_1e57a6; */

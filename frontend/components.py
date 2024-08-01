@@ -22,7 +22,14 @@ instructions_division = html.Div(
 # toggle on-off display of instructions
 instructions_button = dbc.Col(
     children=[
-        html.Button('Instructions', id='instructions_button')
+        html.Button('Instructions', id='instructions_button', className='action-button')
+    ]
+)
+
+# Must block if nothing is valid or loaded; unblock if things are valid
+upload_button = dbc.Col(
+    children=[
+        html.Button('Submit', id='submit_button', className='action-button')
     ]
 )
 
@@ -86,7 +93,11 @@ storimages_layout = dbc.Container(
             ]
                 ),
         dbc.Row([html.Br()]),
-        dbc.Row([instructions_button]),
+        dbc.Row([dbc.Col([upload_button],className='action-button-column')]),
+        dbc.Row([html.Br()]),
+        dbc.Row([html.Br()]),
+        dbc.Row([html.Br()]),
+        dbc.Row([dbc.Col([instructions_button],className='action-button-column')]),
         dbc.Row([instructions_division]),
     ], fluid=True
 )
