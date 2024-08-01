@@ -1,0 +1,44 @@
+:root {
+    --accent: 1, 184, 106;
+    /* at 85% the accent */
+    --accent-light: 179, 255, 222; 
+    /* at 10% the accent */
+    --accent-dark: 0, 51, 27;
+    --accent-gradient: linear-gradient(45deg,
+            rgb(var(--accent)),
+            rgb(var(--accent-light)) 30%,
+            white 60%);
+}
+/* colour in the background is the S in Stori logo */
+html {
+    font-family: system-ui, sans-serif;
+    background: #01383d;
+    background-size: 224px;
+}
+
+h1 {
+    font-size: 4 rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 1em;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
+
+.text-gradient {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    background-position: 0%;
+}
+
+/* to replicate as the one in the website, just a sketch */
+/* @font-face { */
+    /* font-family: __f37hybrid_1e57a6; */
+    /* src: url(/_next/static/media/27032c11b2b92ee9-s.p.woff2) format("woff2"); */
+    /* font-display: swap; */
+    /* font-weight: 200; */
+    /* font-style: normal */
+/* } */
