@@ -2,6 +2,8 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
+src_logo = '/storimages/frontend/assets/storimages_logo_by_morezio_white.svg'
+
 # the contents of a file with instructions; a markdown file
 user_instructions = None # instructions
 
@@ -46,6 +48,18 @@ upload_column = dbc.Col(align='center',children=[
         ]
     )
 ], width=12)
+
+logo = html.Div(
+    children=[
+        html.Img(src=src_logo, className='svg-image')
+    ],
+    style={
+        'position': 'relative',
+        'height': '100vh',
+        'width': '100vw'
+    }
+)
+
 
 ##############
 ### Layout ###
