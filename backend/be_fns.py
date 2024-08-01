@@ -11,21 +11,21 @@ def generate_filename_tn(filename, dimensions_tuple):
     # PATH MUST BE NORMALIZED (single dot, no spaces, lower, no escaping chars)
     # this is one of the reasons why the hashing made sense originally; we
     # catch with that later on
-    split_path = os.path.split(filename) # [directory, filename]
-    dimensions = str(dimensions_tuple[0]) + '_x_' +  str(dimensions_tuple[1])
-    head = split_path[0]
-    tail = split_path[1]
-    name, extension = tail.split('.') # tail.split() = ['cats', 'jpeg']
-    new_filename = os.path.join(head, f'{name}_{dimensions}.{extension}')
+    strip_ext = filename.split('.') # (path, jpeg)
+    extension = strip_ext[1]
+    dimensions = str(dimensions_tuple[0]) + 'x' +  str(dimensions_tuple[1])
+    # /home/cats_10x10.jpeg
+    suffix = f'_{dimensions}.{extension}'
+    new_filename = strip_ext[0]+suffix
     return new_filename
 
 # supposedly, to this point, only supported pics made it here
-# but one never knows... really!
-# dimensions = tuple of (width, height)
+# yet, handle the exceptions higher for now
+# dimensions = tuple of (width, height); must be numerical all the way
 def resize_image(filename, dimensions_tuple):
     with Image.open(filename) as img:
         img = img.resize(dimensions_tuple, Image.ANTIALIAS)
         thumbnail_path = generate_filename_tn(filename, dimensions_tuple)
-
         # add try-excepts outside, to the most general case for now
         img.save(thumbnail_path)
+        return thumbnail_path
