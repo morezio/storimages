@@ -49,7 +49,7 @@ upload_column = dbc.Col(align='center',children=[
         children=[
             # either zip or a directory of pictures or a selection of them
             dcc.Upload( 
-                id='upload_batch',
+                id='upload_area',
                 className='highlight',
                 children=[
                     html.Div([
