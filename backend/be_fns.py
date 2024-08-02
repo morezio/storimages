@@ -24,7 +24,7 @@ def generate_filename_tn(filename, dimensions_tuple):
 # dimensions = tuple of (width, height); must be numerical all the way
 def resize_image(filename, dimensions_tuple):
     with Image.open(filename) as img:
-        img = img.resize(dimensions_tuple, Image.ANTIALIAS)
+        img = img.resize(dimensions_tuple, Image.LANCZOS)
         thumbnail_path = generate_filename_tn(filename, dimensions_tuple)
         # add try-excepts outside, to the most general case for now
         img.save(thumbnail_path)
