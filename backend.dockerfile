@@ -14,7 +14,7 @@ RUN chown -R nonrootuser:nonrootuser /storimages
 USER nonrootuser
 
 
-
+WORKDIR /storimages/backend
 # I break down because it is easier to read and debug
 # Also, used cmd because I find it tedious to split these --arg s if
 # I was using entrypoint x cmd
@@ -27,5 +27,4 @@ CMD gunicorn \
 --log-file=- \
 --access-logfile=- \
 --error-logfile=- \
---capture-output=- \
 --bind=0.0.0.0:80 app:app
