@@ -62,6 +62,9 @@ h1 {
 .action-button-column {
     align-items: center;
 }
+.markdown_text{
+    color: yellow;
+}
 /* to replicate as the one in the website, just a sketch */
 /* @font-face { */
     /* font-family: __f37hybrid_1e57a6; */
