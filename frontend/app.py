@@ -100,27 +100,6 @@ def show_upload_button(preset_dimensions_value):
 # def submit_load(n_clicks, thumbnail_sizes, other_thumbnail_single):
 #     pass
 
-# @app.callback(
-#     [Output("instructions_markdown", "style"),
-#     Input("instructions_button", "n_clicks"),
-#     State("instructions_markdown", "style")],
-#     prevent_initial_call=True)
-# def toggle_text(n_clicks, current_style):
-#     if n_clicks % 2 == 1:
-#         return {"display": "block"}
-#     else:
-#         return {"display": "none"}
-
-# @app.callback(
-#     Output("toggle-button", "style"),
-#     Input("input-value", "value") # 
-# )
-# def toggle_button_visibility(value):
-#     if value and value.strip():
-#         return {"display": "block"}
-#     else:
-#         return {"display": "none"}
-
 
 if __name__ == "__main__":
     app.run(debug=True)
