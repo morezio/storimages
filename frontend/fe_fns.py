@@ -1,5 +1,5 @@
 import zipfile, io, base64, os, asyncio, aiohttp
-from dash import html
+from dash import html, dcc
 
 pillow_supported = [".bmp",".dib",".dcx",".eps",".ps",".gif",".icns",
                         ".ico",".im",".jpg",".jpeg",".jpe",".j2k",".j2p",
@@ -113,3 +113,11 @@ async def async_dispatch(list_of_payloads):
     return list(zip(list_of_payloads, responses)) # list of tuples;
 
 # result = asyncio.run(async_dispatch(list_of_payloads)) # list of tuples; we only need responses
+
+# loads the new picture as bytes to return it to the user
+def load_picture_as_b(path_to_picture):
+    picture_name = os.path.split(path_to_picture)[1]
+    picture = None
+    with open(path_to_picture,'rb') as hh:
+        picture = hh.read()
+    picture_to_download = dcc.send_bytes(picture, picture_name)
