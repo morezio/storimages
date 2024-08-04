@@ -145,6 +145,8 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
             zipped_dir = f'{zip_results_dir}.zip'
             if os.path.exists(zip_results_dir):
                 os.rmdir(zip_results_dir)
+            if os.path.exists(zipped_dir):
+                os.remove(zipped_dir)
             else:
                 os.mkdir(zip_results_dir)
                 zip_file_path = compress_into_zip(zipped_dir, responses)
