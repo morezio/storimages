@@ -110,6 +110,7 @@ def show_upload_button(preset_dimensions_value):
 )
 def submit_load(contents, filename, dimensions_selected, n_clicks):
     # only allow submission if everything is in place
+    print(n_clicks)
     if n_clicks > 0:
         
         is_zip = filename.endswith('.zip')
@@ -124,6 +125,7 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
             payload = generate_payload(filename, dimensions_array)
             print(payload)
             resizing_request = requests.post(endpoint, json=payload, headers=headers)
+            print(resizing_request)
             response = resizing_request.json()
             print(response)
             picture_path = response['filename']
