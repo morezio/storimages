@@ -35,6 +35,14 @@ def extract_zip_to_disk(decoded_content_that_is_zip, filename):
     os.chmod(extraction_dir, 0o777)  # dir is also accessible
     return extraction_dir
 
+#  Compress the directory into a ZIP file
+def compress_into_zip(zip_file_path, responses): # responses = list of paths in responses
+    with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        # file path is the abs path to current path
+        for resized_pic in responses:
+            zipf.write(resized_pic)
+    return zip_file_path
+
 # saves the picture uploaded
 def save_uploaded_picture(decoded_contents, filename):
     uploaded_picture_path = os.path.join(shared_directory,filename)
@@ -123,3 +131,11 @@ def load_picture_as_b(path_to_picture):
         picture = hh.read()
     picture_to_download = [dcc.send_bytes(picture, picture_name)]
     return picture_to_download
+
+def load_zip_as_b(path_to_zip):
+    # zip_name = os.path.split(path_to_zip)[1]
+    zipfile = None
+    with open(path_to_zip,'rb') as hh:
+        zipfile = hh.read()
+    zipfile_to_download = [dcc.send_bytes(zipfile,'results_zip.zip')]
+    return zipfile_to_download
