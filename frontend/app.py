@@ -115,15 +115,15 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
         is_picture = file_is_supported(filename) # checks if picture is supported
         decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
         dimensions_array = resize_to_array(dimensions_selected)
-        headers = {"Content-Type": "application/json"}
+        # headers = {"Content-Type": "application/json"}
 
         if is_picture:
             # save the file to disk
             path_to_pic = save_uploaded_picture(decoded_contents,filename)
             payload = generate_payload(filename, dimensions_array)
             print(payload)
-            resizing_request = requests.post(endpoint, data=payload, headers=headers)
-            # resizing_request = requests.post(endpoint, data=payload)
+            # resizing_request = requests.post(endpoint, data=payload, headers=headers)
+            resizing_request = requests.post(endpoint, data=payload)
             print(resizing_request.text)
             response = resizing_request.json()
             print(response)
