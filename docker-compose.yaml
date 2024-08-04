@@ -1,0 +1,54 @@
+services:
+  be:
+    image: morezio/storimages:be_dev
+    container_name: be
+    volumes:
+      - shared_volume:/storimages/data
+    networks:
+      - storimages_net
+    command: |
+      gunicorn 
+      --workers=1 
+      --log-level=info 
+      --proxy-allow-from '*' 
+      --forwarded-allow-ips '*' 
+      --log-file=- 
+      --access-logfile=- 
+      --error-logfile=- 
+      --bind=0.0.0.0:85 app:app
+  fe:
+    command: |
+      gunicorn
+      --workers=1
+      --log-level=info
+      --proxy-allow-from '*'
+      --forwarded-allow-ips '*'
+      --log-file=-
+      --access-logfile=-
+      --error-logfile=-
+      --bind=0.0.0.0:88 app:server
+    image: morezio/storimages:fe_dev
+    container_name: fe
+    volumes:
+      - shared_volume:/storimages/data
+    networks:
+      - storimages_net
+    environment:
+      - endpoint=http://be:85/create_thumbnail
+    depends_on:
+      - be
+
+  rev_proxy:
+    container_name: rev_proxy
+    image: morezio/rev_proxy:storimages
+    networks:
+      - storimages_net
+    depends_on:
+      - be
+      - fe
+    ports:
+      - 80:80
+networks:
+  storimages_net: {}
+volumes:
+  shared_volume: {}
