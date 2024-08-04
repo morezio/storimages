@@ -3,8 +3,8 @@ FROM morezio/envs:u_dev
 # create non-root user for deployment
 RUN groupadd -r nonrootuser && useradd -r -g nonrootuser nonrootuser
 
-# excuse the abs paths, rest assured it will be fixed & vars are declared at
-# the start of the files for that change later on
+# adds the inter-container shared path
+RUN mkdir -p /storimages/data
 WORKDIR /storimages
 ADD backend/ backend/
 RUN pip install -r backend/be_requirements.txt
