@@ -24,20 +24,22 @@ app = Dash(__name__, server=server, background_callback_manager=lc_manager)
 app.title = "StorImages"
 app.layout = storimages_layout
 
-# show list of valid files
-@app.callback()
-def show_uploaded_files():
-    # if .zip: unzip and check all files are valid
-    # if single image: check is valid
-    # if valid, confirm submit; if not valid, refresh and start over
-    pass
+# # show list of valid files
+# @app.callback([
+#     Output(),
+#     Input()
+# ])
+# def show_uploaded_files():
+#     # if .zip: unzip and check all files are valid
+#     # if single image: check is valid
+#     # if valid, confirm submit; if not valid, refresh and start over
+#     pass
 
 @app.callback(
     [
-        Output("download_legend_div", "children"),
+        Output("download_button", "n_clicks"),
         Input("submit_button", "n_clicks"),
-        State("thumbnail_sizes_dropdown_multiselect", "value"),
-        State("other_thumbnail_singleselect", "value"),
+        State("thumbnail_sizes_dropdown_multiselect", "value")
     ],
     background=True,
     prevent_initial_call=True,
@@ -45,6 +47,28 @@ def show_uploaded_files():
 )
 def submit_load(n_clicks, thumbnail_sizes, other_thumbnail_single):
     pass
+
+@app.callback(
+    [Output("instructions_markdown", "style"),
+    Input("instructions_button", "n_clicks"),
+    State("instructions_markdown", "style")],
+    prevent_initial_call=True,  
+)
+def toggle_text(n_clicks, current_style):
+    if n_clicks % 2 == 1:
+        return {"display": "block"}
+    else:
+        return {"display": "none"}
+
+@app.callback(
+    Output("toggle-button", "style"),
+    Input("input-value", "value")
+)
+def toggle_button_visibility(value):
+    if value and value.strip():
+        return {"display": "block"}
+    else:
+        return {"display": "none"}
 
 
 if __name__ == "__main__":
