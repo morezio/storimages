@@ -1,4 +1,4 @@
-import zipfile, io, requests, base64
+import zipfile, io, requests, base64, os
 from dash import html
 
 pillow_supported = [".bmp",".dib",".dcx",".eps",".ps",".gif",".icns",
@@ -20,7 +20,22 @@ def unzip(decoded_content_that_is_zip):
         file_list = z.namelist()
     return file_list
         
+# extracts to a provisional dir
+def extract_zip_to_disk(decoded_content_that_is_zip):
+    provisional_dir = '/storimages/provisional_dir'
+    provisional_dir_exists = os.path.exists(provisional_dir)
+    
+    if provisional_dir_exists:
+        print('prov exists')
+        os.rmdir(provisional_dir)
+    elif not provisional_dir_exists:
+        print('prov not exists')
+        os.makedirs(provisional_dir)
 
+    with zipfile.ZipFile(io.BytesIO(decoded_content_that_is_zip)) as z:
+        # file_list = z.namelist()
+        print('extracting')
+        z.extractall(provisional_dir)
 
 # validate that the file is supported
 # file_list has to be processed by this fn

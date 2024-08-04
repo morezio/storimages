@@ -98,7 +98,7 @@ def show_upload_button(preset_dimensions_value):
 )
 def submit_load(contents, filename, dimensions, n_clicks):
     # only allow submission if everything is in place
-    if n_clicks > 0:    
+    if n_clicks > 0:
         is_zip = filename.endswith('.zip')
         is_picture = file_is_supported(filename) # checks if picture is supported
         if is_picture:
@@ -109,7 +109,8 @@ def submit_load(contents, filename, dimensions, n_clicks):
             
         elif is_zip:
             decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
-            extract_zip_to_disk(decoded_contents) # extract to /storimages/provisional
+            extract_zip_to_disk(decoded_contents) # extract to /storimages/provisional/{filename}
+
             pass
 
 
