@@ -45,7 +45,8 @@ def save_uploaded_picture(decoded_contents, filename):
     
     with open(uploaded_picture_path, 'wb') as f:
         f.write(decoded_contents)
-    
+    os.chmod(uploaded_picture_path, 0o666)  # accessible by anyone
+    os.chmod(shared_directory, 0o777)  # dir is also accessible
     return uploaded_picture_path
 
 # validate that the file is supported
