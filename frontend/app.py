@@ -64,8 +64,10 @@ def show_uploaded_files(uploaded_contents, filename):
     suppress_callback_exceptions=True,
     prevent_initial_callback=True)
 def show_preset_dimensions(preview_list):
-    if preview_list:
-        return preset_dimensions
+    preview_content = preview_list['props']['children']
+    if preview_list: # if preview_list has children
+        if 'refresh the webpage' not in preview_content:
+            return preset_dimensions
     
 @app.callback(
     Output('submit_button_div', 'children'),
