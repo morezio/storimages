@@ -65,6 +65,9 @@ h1 {
 .markdown_text{
     color: yellow;
 }
+.list-container{
+    color: white;
+}
 /* to replicate as the one in the website, just a sketch */
 /* @font-face { */
     /* font-family: __f37hybrid_1e57a6; */
