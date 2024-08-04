@@ -1,4 +1,4 @@
-import diskcache, flask
+import diskcache, flask, requests, os
 from dash import DiskcacheManager, Dash
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
@@ -7,7 +7,7 @@ from components import (storimages_layout, submit_button, preset_dimensions,
                         error_markdown)
 from fe_fns import (uploaded_content_handler, file_is_supported, 
                     processable_items, unzip, show_items, extract_zip_to_disk,
-                    save_uploaded_picture, resize_to_array)
+                    save_uploaded_picture, resize_to_array, generate_payload)
 
 # app.py = essentially the app you interact with
 # I move layout to another file to make it easier to follow
@@ -17,6 +17,12 @@ from fe_fns import (uploaded_content_handler, file_is_supported,
 # there's more to explain but the disk cache is needed. didn't go the
 # traditional / recommended route because complexity grows and rn the route 
 # isn't worth it right now
+
+# POST endpoint
+try:
+    endpoint = os.environ['endpoint']
+except KeyError:
+    endpoint = 'http://be:80/create_thumbnail'
 
 # 4 mins, 8gb, 8 shards
 cache = diskcache.FanoutCache("./cache", shard=8, timeout=240, 
@@ -28,6 +34,7 @@ server = flask.Flask(__name__)
 app = Dash(__name__, server=server, background_callback_manager=lc_manager)
 app.title = "StorImages"
 app.layout = storimages_layout
+
 
 # show list of valid files
 @app.callback([
@@ -104,12 +111,19 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
         is_zip = filename.endswith('.zip')
         is_picture = file_is_supported(filename) # checks if picture is supported
         decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
-        dimensions = resize_to_array(dimensions_selected)
-        
+        dimensions_array = resize_to_array(dimensions_selected)
+        headers = {"Content-Type": "application/json"}
+
         if is_picture:
             # save the file to disk
-            path_to_pic = save_uploaded_picture(decoded_contents)
-            
+            path_to_pic = save_uploaded_picture(decoded_contents,filename)
+            payload = generate_payload(filename, dimensions_array)
+            print(payload)
+            resizing_request = requests.post(endpoint, data=payload, headers=headers)
+            # resizing_request = requests.post(endpoint, data=payload)
+            print(resizing_request.text)
+            response = resizing_request.json()
+            print(response)
             # send a single request
             # download automatically the file
             pass
