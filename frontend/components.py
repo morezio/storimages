@@ -93,6 +93,9 @@ preset_dimensions = dcc.Dropdown(
         placeholder='Please, select 1 option to proceed')
 
 preview_div = html.Div(id='preview_list', className='list-container', children=[])
+
+error_markdown = dcc.Markdown('## Please refresh the webpage. Your input was not valid', style={'color':'red'})
+
 ##############
 ### Layout ###
 ##############

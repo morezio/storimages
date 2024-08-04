@@ -3,7 +3,8 @@ from dash import DiskcacheManager, Dash
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
-from components import storimages_layout, submit_button, preset_dimensions
+from components import (storimages_layout, submit_button, preset_dimensions,
+                        error_markdown)
 from fe_fns import (uploaded_content_handler, file_is_supported, 
                     processable_items, unzip, show_items)
 
@@ -47,7 +48,7 @@ def show_uploaded_files(uploaded_contents, filename):
             return items_list
         else:
             # return an error about unsupported filename
-            pass
+            return [error_markdown]
         
     elif is_zip:
         decoded_contents = uploaded_content_handler(uploaded_contents, filename)[0] # contents
@@ -56,15 +57,6 @@ def show_uploaded_files(uploaded_contents, filename):
         # show the files that can be processed to the user
         items_list = [show_items(files_processable)]
         return items_list
-
-    
-    
-    # filename = None
-    # # normalize the names of the files;; ask the user to only submit normalised names
-    # # display the names of the pictures
-    # # save files to disk
-    return None
-    pass
 
 @app.callback(
     Output('preset_dimensions_div', 'children'),
@@ -86,19 +78,22 @@ def show_upload_button(preset_dimensions_value):
         return submit_button
 
 
+@app.callback(
+    [
+        Output("download_button", "n_clicks"),
+        State("thumbnail_sizes_dropdown", "value"),
+        State("upload_area", "contents"),
+        State("upload_area", "filename"),
+        Input("submit_button", "n_clicks"),
 
-# @app.callback(
-#     [
-#         Output("download_button", "n_clicks"),
-#         Input("submit_button", "n_clicks"),
-#         State("thumbnail_sizes_dropdown_multiselect", "value")
-#     ],
-#     background=True,
-#     prevent_initial_call=True,
-#     manager=lc_manager,
-# )
-# def submit_load(n_clicks, thumbnail_sizes, other_thumbnail_single):
-#     pass
+    ],
+    background=True,
+    prevent_initial_call=True,
+    suppress_callback_exceptions=True,
+    manager=lc_manager
+)
+def submit_load(n_clicks, thumbnail_sizes):
+    pass
 
 
 if __name__ == "__main__":
