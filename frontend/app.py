@@ -113,6 +113,12 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
     print(n_clicks)
     if n_clicks > 0:
         
+        try:
+            os.rmdir(shared_path)
+            os.mkdir(shared_path)
+        except Exception as e:
+            pass
+        
         is_zip = filename.endswith('.zip')
         is_picture = file_is_supported(filename) # checks if picture is supported
         decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
