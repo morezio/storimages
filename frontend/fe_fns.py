@@ -22,19 +22,18 @@ def unzip(decoded_content_that_is_zip):
     return file_list
         
 # extracts to a provisional dir
-def extract_zip_to_disk(decoded_content_that_is_zip):
-    provisional_dir = '/storimages'
-    provisional_dir_exists = os.path.exists(provisional_dir)
-    
-    if provisional_dir_exists:
-        print('prov exists')
-        os.rmdir(provisional_dir)
-    elif not provisional_dir_exists:
-        print('prov not exists')
-        os.makedirs(provisional_dir)
+def extract_zip_to_disk(decoded_content_that_is_zip, filename):
+    dir_name = filename.replace('.zip','')
+    extraction_dir = os.path.join(shared_directory, dir_name)
 
     with zipfile.ZipFile(io.BytesIO(decoded_content_that_is_zip)) as z:
-        z.extractall(provisional_dir)
+        z.extractall(shared_directory)
+    files_paths = [os.path.join(extraction_dir, image) for image in os.listdir(extraction_dir)]
+    items_processable = processable_items(files_paths)
+    for item in items_processable:
+        os.chmod(item, 0o666)  # accessible by anyone
+    os.chmod(extraction_dir, 0o777)  # dir is also accessible
+    return extraction_dir
 
 # saves the picture uploaded
 def save_uploaded_picture(decoded_contents, filename):
