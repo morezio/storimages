@@ -1,8 +1,11 @@
 import diskcache, flask
 from dash import DiskcacheManager, Dash
 from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
 
-from components import storimages_layout
+from components import storimages_layout, submit_button, preset_dimensions
+from fe_fns import (uploaded_content_handler, file_is_supported, 
+                    processable_items, unzip, show_items)
 
 # app.py = essentially the app you interact with
 # I move layout to another file to make it easier to follow
@@ -24,51 +27,99 @@ app = Dash(__name__, server=server, background_callback_manager=lc_manager)
 app.title = "StorImages"
 app.layout = storimages_layout
 
-# # show list of valid files
-# @app.callback([
-#     Output(),
-#     Input()
-# ])
-# def show_uploaded_files():
-#     # if .zip: unzip and check all files are valid
-#     # if single image: check is valid
-#     # if valid, confirm submit; if not valid, refresh and start over
-#     pass
-
-@app.callback(
-    [
-        Output("download_button", "n_clicks"),
-        Input("submit_button", "n_clicks"),
-        State("thumbnail_sizes_dropdown_multiselect", "value")
+# show list of valid files
+@app.callback([
+    Output('preview_list', 'children'),
+    Input('upload_area', 'contents'),
+    Input('upload_area','filename'),
     ],
-    background=True,
-    prevent_initial_call=True,
-    manager=lc_manager,
+    prevent_initial_call=True
 )
-def submit_load(n_clicks, thumbnail_sizes, other_thumbnail_single):
+def show_uploaded_files(uploaded_contents, filename):
+    # Must block if nothing is valid or loaded; unblock if things are valid
+    # check if the upload is valid
+    is_zip = filename.endswith('.zip')
+    if not is_zip: # that is, if it could be a picture
+        is_picture = file_is_supported(filename) # checks if picture is supported
+        if is_picture:
+            # show the preview to the user
+            items_list = [show_items(filename)]
+            return items_list
+        else:
+            # return an error about unsupported filename
+            pass
+        
+    elif is_zip:
+        decoded_contents = uploaded_content_handler(uploaded_contents, filename)[0] # contents
+        files_in_zip = unzip(decoded_contents)
+        files_processable = processable_items(files_in_zip)
+        # show the files that can be processed to the user
+        items_list = [show_items(files_processable)]
+        return items_list
+
+    
+    
+    # filename = None
+    # # normalize the names of the files;; ask the user to only submit normalised names
+    # # display the names of the pictures
+    # # save files to disk
+    return None
     pass
 
 @app.callback(
-    [Output("instructions_markdown", "style"),
-    Input("instructions_button", "n_clicks"),
-    State("instructions_markdown", "style")],
-    prevent_initial_call=True,  
-)
-def toggle_text(n_clicks, current_style):
-    if n_clicks % 2 == 1:
-        return {"display": "block"}
-    else:
-        return {"display": "none"}
-
+    Output('preset_dimensions_div', 'children'),
+    Input('preview_list', 'children'),
+    suppress_callback_exceptions=True,
+    prevent_initial_callback=True)
+def show_preset_dimensions(preview_list):
+    if preview_list:
+        return preset_dimensions
+    
 @app.callback(
-    Output("toggle-button", "style"),
-    Input("input-value", "value")
-)
-def toggle_button_visibility(value):
-    if value and value.strip():
-        return {"display": "block"}
-    else:
-        return {"display": "none"}
+    Output('submit_button_div', 'children'),
+    Input('thumbnail_sizes_dropdown', 'value'),
+    suppress_callback_exceptions=True,
+    prevent_initial_callback=True
+    )
+def show_upload_button(preset_dimensions_value):
+    if preset_dimensions_value:
+        return submit_button
+
+
+
+# @app.callback(
+#     [
+#         Output("download_button", "n_clicks"),
+#         Input("submit_button", "n_clicks"),
+#         State("thumbnail_sizes_dropdown_multiselect", "value")
+#     ],
+#     background=True,
+#     prevent_initial_call=True,
+#     manager=lc_manager,
+# )
+# def submit_load(n_clicks, thumbnail_sizes, other_thumbnail_single):
+#     pass
+
+# @app.callback(
+#     [Output("instructions_markdown", "style"),
+#     Input("instructions_button", "n_clicks"),
+#     State("instructions_markdown", "style")],
+#     prevent_initial_call=True)
+# def toggle_text(n_clicks, current_style):
+#     if n_clicks % 2 == 1:
+#         return {"display": "block"}
+#     else:
+#         return {"display": "none"}
+
+# @app.callback(
+#     Output("toggle-button", "style"),
+#     Input("input-value", "value") # 
+# )
+# def toggle_button_visibility(value):
+#     if value and value.strip():
+#         return {"display": "block"}
+#     else:
+#         return {"display": "none"}
 
 
 if __name__ == "__main__":

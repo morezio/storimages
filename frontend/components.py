@@ -13,8 +13,8 @@ with open('/storimages/frontend/assets/instructions.md') as hh:
 instructions = dcc.Markdown(
     id='instructions_markdown',
     className='markdown_text',
-    children=[user_instructions],
-    style={"display": "none"}
+    children=[user_instructions]
+    # style={"display": "none"}
 )
 
 # div separated because I felt it unreadable rn, might re-int
@@ -29,12 +29,10 @@ instructions_button = dbc.Col(
     ]
 )
 
-# Must block if nothing is valid or loaded; unblock if things are valid
-submit_button = dbc.Col(
-    children=[
-        html.Button('Submit', id='submit_button', className='action-button')
-    ]
-)
+submit_button_div = html.Div(id='submit_button_div',children=[])
+
+submit_button = [dbc.Col(
+    children=[html.Button('Submit', id='submit_button', className='action-button')])]
 
 # must appear only when processing is done
 download_button = dbc.Col(
@@ -78,11 +76,11 @@ logo = html.Div(
     }
 )
 
-preset_dimensions = dbc.Col(
+preset_dimensions_div = dbc.Col(
     align='center',
-    children=[
-        html.Div(
-            dcc.Dropdown(
+    children=[html.Div(id='preset_dimensions_div')], width=6)
+
+preset_dimensions = dcc.Dropdown(
             id='thumbnail_sizes_dropdown',
         options=[
             'Photo galleries = 120x90',
@@ -92,11 +90,9 @@ preset_dimensions = dbc.Col(
             'Online store - large = 150x150',
             'Icons = 96x96'
         ],
-        placeholder='Please, select 1 option to proceed'))
-    ],
-    width=6
-)
+        placeholder='Please, select 1 option to proceed')
 
+preview_div = html.Div(id='preview_list', className='list-container', children=[])
 ##############
 ### Layout ###
 ##############
@@ -110,7 +106,14 @@ storimages_layout = dbc.Container(
                 dbc.Col([
                     html.Div([
                         # upload_column is full grid
-                        dbc.Row([upload_column, preset_dimensions]),
+                        dbc.Row([upload_column, 
+                                 html.Br(),
+                                 preview_div, 
+                                 html.Br(),
+                                 preset_dimensions_div,
+                                 html.Br(),
+                                 submit_button_div
+                                 ]),
                         dbc.Row([html.Br()]), # placeholder for loading bar
                         dbc.Row([html.Br()]), # spacing
                         # download button and legend
@@ -121,13 +124,14 @@ storimages_layout = dbc.Container(
             ]
                 ),
         dbc.Row([html.Br()]),
-        dbc.Row([dbc.Col([submit_button],className='action-button-column')]),
+        # dbc.Row([dbc.Col([preview_div])]),
+        # dbc.Row([dbc.Col([submit_button_div],className='action-button-column')]),
         dbc.Row([html.Br()]),
         dbc.Row([html.Br()]),
         dbc.Row([dbc.Col([download_button])]),
         dbc.Row([html.Br()]),
         dbc.Row([html.Br()]),
-        dbc.Row([dbc.Col([instructions_button],className='action-button-column')]),
-        dbc.Row([instructions_division]),
+        # dbc.Row([dbc.Col([instructions_button],className='action-button-column')]),
+        dbc.Row([instructions_division])
     ], fluid=True
 )
