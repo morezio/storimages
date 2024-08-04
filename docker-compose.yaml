@@ -1,0 +1,25 @@
+services:
+  be:
+    image: morezio/storimages:be_dev
+    container_name: be
+    volumes:
+      - shared_volume:/storimages/data
+    networks:
+      - storimages_net
+  fe:
+    image: morezio/storimages:fe_dev
+    container_name: fe
+    volumes:
+      - shared_volume:/storimages/data
+    networks:
+      - storimages_net
+    environment:
+      - endpoint=http://be:80/create_thumbnail
+    ports:
+      - 80:80
+    depends_on:
+      - be
+networks:
+  storimages_net: {}
+volumes:
+  shared_volume: {}
