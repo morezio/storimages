@@ -1,4 +1,4 @@
-import diskcache, flask, requests, os
+import diskcache, flask, requests, os, shutil
 from dash import DiskcacheManager, Dash
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
@@ -8,7 +8,7 @@ from components import (storimages_layout, submit_button, preset_dimensions,
 from fe_fns import (uploaded_content_handler, file_is_supported, 
                     processable_items, unzip, show_items, extract_zip_to_disk,
                     save_uploaded_picture, resize_to_array, generate_payload,
-                    load_picture_as_b)
+                    load_picture_as_b, compress_into_zip,load_zip_as_b)
 
 # POST endpoint
 try:
@@ -118,6 +118,7 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
         decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
         dimensions_array = resize_to_array(dimensions_selected)
         headers = {"Content-Type": "application/json"}
+        zip_results_dir = os.path.join(shared_path, '')
 
         if is_picture:
             # save the file to disk
@@ -133,11 +134,21 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
             print('sending picture')
             return resized_picture
             
-        elif is_zip:
-            extract_zip_to_disk(decoded_contents) # extract to /storimages/{filename}
-
-            pass
-
-
+        elif is_zip: # seq and not async because no time left
+            extracted_to = extract_zip_to_disk(decoded_contents, filename) # extract to /storimages/data/{dirname}
+            files_paths = [os.path.join(extracted_to, image) for image in os.listdir(extracted_to)]
+            items_processable = processable_items(files_paths)
+            payloads_to_be_sent = [generate_payload(file, dimensions_array) for file in items_processable]
+            responses = [requests.post(endpoint, json=payload, headers=headers).json()['filename']
+                          for payload in payloads_to_be_sent]
+            zip_results_dir = '/storimages/data/resulting_zip'
+            zipped_dir = f'{zip_results_dir}.zip'
+            if os.path.exists(zip_results_dir):
+                os.rmdir(zip_results_dir)
+            else:
+                os.mkdir(zip_results_dir)
+                zip_file_path = compress_into_zip(zipped_dir, responses)
+                downloadable_zip = load_zip_as_b(zip_file_path)
+                return downloadable_zip
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
