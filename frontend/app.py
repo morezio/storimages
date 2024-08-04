@@ -7,7 +7,8 @@ from components import (storimages_layout, submit_button, preset_dimensions,
                         error_markdown)
 from fe_fns import (uploaded_content_handler, file_is_supported, 
                     processable_items, unzip, show_items, extract_zip_to_disk,
-                    save_uploaded_picture, resize_to_array, generate_payload)
+                    save_uploaded_picture, resize_to_array, generate_payload,
+                    load_picture_as_b)
 
 # POST endpoint
 try:
@@ -96,7 +97,7 @@ def show_upload_button(preset_dimensions_value):
 
 @app.callback(
     [
-        # Output("download_button_div", "children"), # we will auto download
+        Output("download_image", "data"), # we will auto download
         State("upload_area", "contents"),
         State("upload_area", "filename"),
         State("thumbnail_sizes_dropdown", "value"),
@@ -115,21 +116,20 @@ def submit_load(contents, filename, dimensions_selected, n_clicks):
         is_picture = file_is_supported(filename) # checks if picture is supported
         decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
         dimensions_array = resize_to_array(dimensions_selected)
-        # headers = {"Content-Type": "application/json"}
+        headers = {"Content-Type": "application/json"}
 
         if is_picture:
             # save the file to disk
             path_to_pic = save_uploaded_picture(decoded_contents,filename)
             payload = generate_payload(filename, dimensions_array)
             print(payload)
-            # resizing_request = requests.post(endpoint, data=payload, headers=headers)
-            resizing_request = requests.post(endpoint, data=payload)
-            print(resizing_request.text)
+            resizing_request = requests.post(endpoint, json=payload, headers=headers)
             response = resizing_request.json()
             print(response)
-            # send a single request
-            # download automatically the file
-            pass
+            picture_path = response['filename']
+            resized_picture = load_picture_as_b(picture_path)
+            print('sending picture')
+            return resized_picture
             
         elif is_zip:
             extract_zip_to_disk(decoded_contents) # extract to /storimages/{filename}

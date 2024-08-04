@@ -97,6 +97,8 @@ preview_div = html.Div(id='preview_list', className='list-container', children=[
 error_markdown = dcc.Markdown('## Please refresh the webpage. Your input was \
                               not valid. Only upload .zip or pics of supported format', style={'color':'red'})
 
+auto_download = html.Div([dcc.Download(id="download_image")])
+
 ##############
 ### Layout ###
 ##############
@@ -132,7 +134,7 @@ storimages_layout = dbc.Container(
         # dbc.Row([dbc.Col([submit_button_div],className='action-button-column')]),
         dbc.Row([html.Br()]),
         dbc.Row([html.Br()]),
-        dbc.Row([dbc.Col([download_button])]),
+        # dbc.Row([dbc.Col([download_button])]),
         dbc.Row([html.Br()]),
         dbc.Row([html.Br()]),
         # dbc.Row([dbc.Col([instructions_button],className='action-button-column')]),
