@@ -87,11 +87,3 @@ def resize_to_array(dimensions_selected):
     }
     dimensions_array = choices[dimensions_selected]
     return dimensions_array
-
-# # given the dimensions selected, 
-# def user_dims_selection():
-#     pass
-
-# def hash_picture():
-#     pass
-
