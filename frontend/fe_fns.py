@@ -22,7 +22,7 @@ def unzip(decoded_content_that_is_zip):
         
 # extracts to a provisional dir
 def extract_zip_to_disk(decoded_content_that_is_zip):
-    provisional_dir = '/storimages/provisional_dir'
+    provisional_dir = '/storimages'
     provisional_dir_exists = os.path.exists(provisional_dir)
     
     if provisional_dir_exists:
@@ -33,9 +33,19 @@ def extract_zip_to_disk(decoded_content_that_is_zip):
         os.makedirs(provisional_dir)
 
     with zipfile.ZipFile(io.BytesIO(decoded_content_that_is_zip)) as z:
-        # file_list = z.namelist()
-        print('extracting')
         z.extractall(provisional_dir)
+
+# saves the picture uploaded
+def save_uploaded_picture(decoded_contents, filename):
+    uploaded_picture_path = os.path.join('/storimages',filename)
+    
+    if os.path.exists(uploaded_picture_path):
+        os.remove(uploaded_picture_path)
+    
+    with open(uploaded_picture_path, 'wb') as f:
+        f.write(decoded_contents)
+    
+    return uploaded_picture_path
 
 # validate that the file is supported
 # file_list has to be processed by this fn
