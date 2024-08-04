@@ -122,6 +122,7 @@ storimages_layout = dbc.Container(
                                  ]),
                         dbc.Row([html.Br()]), # placeholder for loading bar
                         dbc.Row([html.Br()]), # spacing
+                        dbc.Row([auto_download]), # spacing
                         # download button and legend
                         # dbc.Row([download_button]),
                         # dbc.Row([update_legend_div]),
