@@ -1,4 +1,5 @@
 import zipfile, io, requests, base64
+from dash import html
 
 pillow_supported = [".bmp",".dib",".dcx",".eps",".ps",".gif",".icns",
                         ".ico",".im",".jpg",".jpeg",".jpe",".j2k",".j2p",
@@ -6,11 +7,11 @@ pillow_supported = [".bmp",".dib",".dcx",".eps",".ps",".gif",".icns",
                         ".png",".ppm",".pbm",".pgm",".psd",".sgi",".tiff",
                         ".tif",".webp",".xbm",".xpm"]
 
+# returns decoded contents and its filename in a tuple
 def uploaded_content_handler(contents, filename):
     content_type, content_string = contents.split(',')
     decoded_content = base64.b64decode(content_string)
-    if filename.endswith('.zip'):
-        pass
+    return decoded_content, filename
 
 # unzips in memory
 def unzip(decoded_content_that_is_zip):
@@ -35,7 +36,20 @@ def processable_items(file_list):
         if file_is_supported(image_filename):
             items_to_process.append(image_filename)
     return items_to_process
-        
+
+# will return a list of files to show to the user before unblocking the submit 
+# button
+def show_items(filename_or_list):
+    if isinstance(filename_or_list, list):
+        show_items = html.Div([
+        html.H3("Processable items"),
+        html.Ul([html.Li(filename) for filename in filename_or_list], id="list-container")])
+        return show_items
+    elif isinstance(filename_or_list, str):
+        show_items = html.Div([
+        html.H3("Processable items"),
+        html.Ul([html.Li(filename_or_list)], id="list-container")])
+        return show_items
 
 
 # # given the dimensions selected, 
