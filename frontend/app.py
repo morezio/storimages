@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 from components import (storimages_layout, submit_button, preset_dimensions,
                         error_markdown)
 from fe_fns import (uploaded_content_handler, file_is_supported, 
-                    processable_items, unzip, show_items)
+                    processable_items, unzip, show_items, extract_zip_to_disk)
 
 # app.py = essentially the app you interact with
 # I move layout to another file to make it easier to follow
@@ -64,7 +64,10 @@ def show_uploaded_files(uploaded_contents, filename):
     suppress_callback_exceptions=True,
     prevent_initial_callback=True)
 def show_preset_dimensions(preview_list):
-    preview_content = preview_list['props']['children']
+    try:
+        preview_content = preview_list['props']['children']
+    except TypeError:
+        preview_content = ''
     if preview_list: # if preview_list has children
         if 'refresh the webpage' not in preview_content:
             return preset_dimensions
@@ -82,20 +85,32 @@ def show_upload_button(preset_dimensions_value):
 
 @app.callback(
     [
-        Output("download_button", "n_clicks"),
-        State("thumbnail_sizes_dropdown", "value"),
+        # Output("download_button_div", "children"), # we will auto download
         State("upload_area", "contents"),
         State("upload_area", "filename"),
+        State("thumbnail_sizes_dropdown", "value"),
         Input("submit_button", "n_clicks"),
-
     ],
     background=True,
     prevent_initial_call=True,
     suppress_callback_exceptions=True,
     manager=lc_manager
 )
-def submit_load(n_clicks, thumbnail_sizes):
-    pass
+def submit_load(contents, filename, dimensions, n_clicks):
+    # only allow submission if everything is in place
+    if n_clicks > 0:    
+        is_zip = filename.endswith('.zip')
+        is_picture = file_is_supported(filename) # checks if picture is supported
+        if is_picture:
+            # save the file to disk
+            # send a single request
+            # download automatically the file
+            pass
+            
+        elif is_zip:
+            decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
+            extract_zip_to_disk(decoded_contents) # extract to /storimages/provisional
+            pass
 
 
 if __name__ == "__main__":
