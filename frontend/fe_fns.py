@@ -6,6 +6,7 @@ pillow_supported = [".bmp",".dib",".dcx",".eps",".ps",".gif",".icns",
                         ".jp2",".jpc",".jpf",".jpx",".mpo",".msp",".pcx",
                         ".png",".ppm",".pbm",".pgm",".psd",".sgi",".tiff",
                         ".tif",".webp",".xbm",".xpm"]
+shared_directory = '/storimages/data'
 
 # returns decoded contents and its filename in a tuple
 def uploaded_content_handler(contents, filename):
@@ -37,7 +38,7 @@ def extract_zip_to_disk(decoded_content_that_is_zip):
 
 # saves the picture uploaded
 def save_uploaded_picture(decoded_contents, filename):
-    uploaded_picture_path = os.path.join('/storimages/backend',filename)
+    uploaded_picture_path = os.path.join(shared_directory,filename)
     
     if os.path.exists(uploaded_picture_path):
         os.remove(uploaded_picture_path)
@@ -90,7 +91,7 @@ def resize_to_array(dimensions_selected):
 
 def generate_payload(filename, dimensions_array):
     payload = {}
-    payload['filename'] = os.path.join('/storimages/backend',filename)
+    payload['filename'] = os.path.join(shared_directory,filename)
     payload['dimensions'] = dimensions_array
     return payload
 

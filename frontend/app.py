@@ -19,7 +19,7 @@ except KeyError:
 # app.py = essentially the app you interact with
 # I move layout to another file to make it easier to follow
 
-shared_path = '/storimages/backend'
+shared_path = '/storimages/data'
 shared_path_exists = os.path.exists(shared_path)
 if not shared_path_exists:
     os.mkdir(shared_path)
