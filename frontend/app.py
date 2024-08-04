@@ -7,7 +7,7 @@ from components import (storimages_layout, submit_button, preset_dimensions,
                         error_markdown)
 from fe_fns import (uploaded_content_handler, file_is_supported, 
                     processable_items, unzip, show_items, extract_zip_to_disk,
-                    save_uploaded_picture)
+                    save_uploaded_picture, resize_to_array)
 
 # app.py = essentially the app you interact with
 # I move layout to another file to make it easier to follow
@@ -97,12 +97,15 @@ def show_upload_button(preset_dimensions_value):
     suppress_callback_exceptions=True,
     manager=lc_manager
 )
-def submit_load(contents, filename, dimensions, n_clicks):
+def submit_load(contents, filename, dimensions_selected, n_clicks):
     # only allow submission if everything is in place
     if n_clicks > 0:
+        
         is_zip = filename.endswith('.zip')
         is_picture = file_is_supported(filename) # checks if picture is supported
         decoded_contents = uploaded_content_handler(contents, filename)[0] # contents
+        dimensions = resize_to_array(dimensions_selected)
+        
         if is_picture:
             # save the file to disk
             path_to_pic = save_uploaded_picture(decoded_contents)

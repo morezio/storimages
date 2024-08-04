@@ -76,6 +76,17 @@ def show_items(filename_or_list):
         html.Ul([html.Li(filename_or_list)], id="list-container")])
         return show_items
 
+def resize_to_array(dimensions_selected):
+    choices = {
+        'Photo galleries = 120x90':[120, 90],
+        'Video = 160x120':[160, 120],
+        'Social media profile picture = 100x100':[100, 100],
+        'Online store - small = 80x80':[80, 80],
+        'Online store - large = 150x150':[150, 150],
+        'Icons = 96x96':[96, 96]
+    }
+    dimensions_array = choices[dimensions_selected]
+    return dimensions_array
 
 # # given the dimensions selected, 
 # def user_dims_selection():
