@@ -30,7 +30,7 @@ instructions_button = dbc.Col(
 )
 
 # Must block if nothing is valid or loaded; unblock if things are valid
-upload_button = dbc.Col(
+submit_button = dbc.Col(
     children=[
         html.Button('Submit', id='submit_button', className='action-button')
     ]
@@ -121,7 +121,7 @@ storimages_layout = dbc.Container(
             ]
                 ),
         dbc.Row([html.Br()]),
-        dbc.Row([dbc.Col([upload_button],className='action-button-column')]),
+        dbc.Row([dbc.Col([submit_button],className='action-button-column')]),
         dbc.Row([html.Br()]),
         dbc.Row([html.Br()]),
         dbc.Row([dbc.Col([download_button])]),
