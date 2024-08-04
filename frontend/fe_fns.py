@@ -1,4 +1,4 @@
-import zipfile, io, requests, base64, os
+import zipfile, io, base64, os, asyncio, aiohttp
 from dash import html
 
 pillow_supported = [".bmp",".dib",".dcx",".eps",".ps",".gif",".icns",
@@ -87,3 +87,29 @@ def resize_to_array(dimensions_selected):
     }
     dimensions_array = choices[dimensions_selected]
     return dimensions_array
+
+def generate_payload(filename, dimensions_array):
+    payload = {}
+    payload['filename'] = filename
+    payload['dimensions'] = dimensions_array
+    return payload
+
+# sends requests async to the backend
+async def async_fetch(payload_dict):
+    payload = payload_dict['data_dict']
+    endpoint = payload_dict['endpoint']
+    
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(endpoint, data=payload) as response:
+                response.raise_for_status()  # raises an HTTPError for bad responses
+                return await response.json()
+        except aiohttp.ClientError as e:
+            return {'error': str(e)}
+
+async def async_dispatch(list_of_payloads):
+    tasks = [async_fetch(payload_dict) for payload_dict in list_of_payloads]
+    responses = await asyncio.gather(*tasks, return_exceptions=True)
+    return list(zip(list_of_payloads, responses)) # list of tuples;
+
+# result = asyncio.run(async_dispatch(list_of_payloads)) # list of tuples; we only need responses
