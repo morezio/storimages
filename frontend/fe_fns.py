@@ -122,5 +122,5 @@ def load_picture_as_b(path_to_picture):
     picture = None
     with open(path_to_picture,'rb') as hh:
         picture = hh.read()
-    picture_to_download = dcc.send_bytes(picture, picture_name)
+    picture_to_download = [dcc.send_bytes(picture, picture_name)]
     return picture_to_download
