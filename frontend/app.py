@@ -9,21 +9,24 @@ from fe_fns import (uploaded_content_handler, file_is_supported,
                     processable_items, unzip, show_items, extract_zip_to_disk,
                     save_uploaded_picture, resize_to_array, generate_payload)
 
-# app.py = essentially the app you interact with
-# I move layout to another file to make it easier to follow
-
-
-# dash works with callback functions that give the interactivity
-# there's more to explain but the disk cache is needed. didn't go the
-# traditional / recommended route because complexity grows and rn the route 
-# isn't worth it right now
-
 # POST endpoint
 try:
     endpoint = os.environ['endpoint']
 except KeyError:
     endpoint = 'http://be:80/create_thumbnail'
 
+# app.py = essentially the app you interact with
+# I move layout to another file to make it easier to follow
+
+shared_path = '/storimages/backend'
+shared_path_exists = os.path.exists(shared_path)
+if not shared_path_exists:
+    os.mkdir(shared_path)
+
+# dash works with callback functions that give the interactivity
+# there's more to explain but the disk cache is needed. didn't go the
+# traditional / recommended route because complexity grows and rn the route 
+# isn't worth it right now
 # 4 mins, 8gb, 8 shards
 cache = diskcache.FanoutCache("./cache", shard=8, timeout=240, 
                               size_limit=80000000000)
