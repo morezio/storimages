@@ -5,13 +5,16 @@ import dash_bootstrap_components as dbc
 src_logo = '/storimages/frontend/assets/storimages_logo_by_morezio_white.svg'
 
 # the contents of a file with instructions; a markdown file
-user_instructions = None # instructions
+user_instructions = None
+with open('/storimages/frontend/assets/instructions.md') as hh:
+    user_instructions = hh.read()
 
 # holder for contents
 instructions = dcc.Markdown(
-    children=[user_instructions] 
-## should come in css, but just a reminder for self
-# add style={'fontFamily':'Helvetica, sans-serif', 'color':'#fffff99','width':'87%'}
+    id='instructions_markdown',
+    className='markdown_text',
+    children=[user_instructions],
+    style={"display": "none"}
 )
 
 # div separated because I felt it unreadable rn, might re-int
@@ -36,7 +39,7 @@ upload_button = dbc.Col(
 # must appear only when processing is done
 download_button = dbc.Col(
     children=[
-        html.Button('Download results', id='download_button')
+        html.Button('Download results', id='download_button', style={'display':'none'})
     ]
 )
 
@@ -62,7 +65,7 @@ upload_column = dbc.Col(align='center',children=[
             )
         ]
     )
-], width=12)
+], width=6)
 
 logo = html.Div(
     children=[
@@ -75,6 +78,24 @@ logo = html.Div(
     }
 )
 
+preset_dimensions = dbc.Col(
+    align='center',
+    children=[
+        html.Div(
+            dcc.Dropdown(
+            id='thumbnail_sizes_dropdown',
+        options=[
+            'Photo galleries = 120x90',
+            'Video = 160x120',
+            'Social media profile picture = 100x100',
+            'Online store - small = 80x80',
+            'Online store - large = 150x150',
+            'Icons = 96x96'
+        ],
+        placeholder='Please, select 1 option to proceed'))
+    ],
+    width=6
+)
 
 ##############
 ### Layout ###
@@ -89,7 +110,7 @@ storimages_layout = dbc.Container(
                 dbc.Col([
                     html.Div([
                         # upload_column is full grid
-                        dbc.Row([upload_column]),
+                        dbc.Row([upload_column, preset_dimensions]),
                         dbc.Row([html.Br()]), # placeholder for loading bar
                         dbc.Row([html.Br()]), # spacing
                         # download button and legend
